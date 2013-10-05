@@ -5,8 +5,8 @@ configure do
 end
 
 use OmniAuth::Builder do
-  # provider :car2go, Site::CONFIG[:car2go][:client_id], Site::CONFIG[:car2go][:client_secret]
-  provider :google_oauth2, Site::CONFIG[:google][:client_id], Site::CONFIG[:google][:client_secret], {
+  # provider :car2go, Site::CONFIG['car2go']['client_id'], Site::CONFIG['car2go']['client_secret']
+  provider :google_oauth2, Site::CONFIG['google']['client_id'], Site::CONFIG['google']['client_secret'], {
     access_type: 'offline', 
     approval_prompt: 'force',
     scope: 'https://www.googleapis.com/auth/glass.timeline https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/glass.location'
@@ -40,8 +40,8 @@ end
 get '/setup/complete' do
   token = params[:google_token]
   @mirror = MirrorClient.new Signet::OAuth2::Client.new({
-    access_token: Site::CONFIG[:google][:access_token],
-    refresh_token: Site::CONFIG[:google][:refresh_token]
+    access_token: Site::CONFIG['google']['access_token'],
+    refresh_token: Site::CONFIG['google']['refresh_token']
   })
   puts @mirror.insert_subscription '117847912875913905493', 'locations', 'https://pin13.net/car2go-glass/callback.php'
   erb :setup_complete
